@@ -18,7 +18,7 @@ Function LockDeviceOnActor(Actor akOriginator, string paramsJson, Form inventory
         return
     endif
     Armor deviceInventory = inventoryDevice as Armor
-    actor akTarget = SkyrimNetApi.GetJsonActor(paramsJson, "target", Game.GetPlayer())
+    Actor akTarget = ResolveTarget(akOriginator, paramsJson)
     if deviceInventory == None || akTarget == None
         return
     endif
@@ -349,35 +349,35 @@ bool Function ExtCmdUnequip_IsEligible(Actor akActor, String device_name) global
     return true
 EndFunction
 
-Function ExtCmdUnequip(Actor akOriginator, String paramsJson, String name ) global 
-    Actor player = Game.GetPlayer() 
-    actor akTarget = SkyrimNetApi.GetJsonActor(paramsJson, "target", player)
+; Resolves "target", or "debug_target" (self, player or a nearby actor's display name) from the debug key.
+; GetJsonActor can't be used for debug_target, since the nearby targets are preloaded by the C code.
+Actor Function ResolveTarget(Actor akOriginator, String paramsJson) global
+    Actor player = Game.GetPlayer()
     String debug_target = SkyrimNetApi.GetJsonString(paramsJson, "debug_target","")
-    Debug.Trace("[SkyrimNet_UDNG] paramsJson: "+paramsJson+" name: "+name+" debug_target:"+debug_target)
-    ; ------ Used to Test This function, could be commented out in final build 
-    ; You can't use the GetJsonActor, since the nearby targets are preloaded by the C code 
-    if debug_target != "" 
-        if debug_target == "self" 
-            akTarget = akOriginator
-        elseif debug_target == "player" 
-            akTarget = player 
-        else
-            akTarget = None 
-            Actor[] actors = MiscUtil.ScanCellActors(player, 1000)
-            int j = actors.length - 1 
-            while 0 <= j && akTarget == None 
-                if actors[j].GetDisplayName() == debug_target
-                    akTarget = actors[j] 
-                endif 
-                j -= 1 
-            endwhile 
+    Debug.Trace("[SkyrimNet_UDNG] paramsJson: "+paramsJson+" debug_target:"+debug_target)
+    if debug_target == ""
+        return SkyrimNetApi.GetJsonActor(paramsJson, "target", player)
+    endif
+    if debug_target == "self"
+        return akOriginator
+    endif
+    if debug_target == "player"
+        return player
+    endif
+    Actor[] actors = MiscUtil.ScanCellActors(player, 1000)
+    int j = actors.length - 1
+    while 0 <= j
+        if actors[j].GetDisplayName() == debug_target
+            return actors[j]
+        endif
+        j -= 1
+    endwhile
+    Debug.Notification("failed to find other:"+debug_target)
+    return None
+EndFunction
 
-            if akTarget == None 
-                Debug.Notification("failed to find other:"+debug_target)
-                return 
-            endif 
-        endif 
-    endif 
+Function ExtCmdUnequip(Actor akOriginator, String paramsJson, String name ) global
+    Actor akTarget = ResolveTarget(akOriginator, paramsJson)
     if akOriginator == None || akTarget == None || akTarget.IsChild()
         return
     endif

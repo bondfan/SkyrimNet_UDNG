@@ -237,24 +237,25 @@ Event OnKeyDown(int key_code)
             buttons[cancel] = "Cancel"
 
             int button = SkyMessage.ShowArray("Unequip/Equip "+name+" on:", buttons, getIndex = true) as int  
-            if button < cancel
-                String debug_str = "" 
-                if button == target_self 
+            if 0 <= button && button < cancel
+                String debug_str = ""
+                if button == target_self
                     debug_str = "self"
-                elseif button == target_player 
+                elseif button == target_player
                     debug_str = "player"
-                elseif target_other_actor != None 
-                    debug_str = target_other_actor.GetDisplayName() 
-                endif 
+                elseif target_other_actor != None
+                    debug_str = target_other_actor.GetDisplayName()
+                endif
 
-                if debug_str != "" 
+                if debug_str != ""
+                    String params = "{\"debug_target\":\""+debug_str+"\"}"
                     if equipped[button]
-                        skynet_DeviousScript.ExtCmdUnequip(speaker, "{\"debug_target\":\""+debug_str+"\"}", name)
-                    else 
-                        ; skynet_DeviousScript.ExtCmdUnequip(speaker, "{\"debug_target\":\""+debug_str+"\"}", name)
-                    endif 
-                endif 
-            endif 
+                        skynet_DeviousScript.ExtCmdUnequip(speaker, params, name)
+                    else
+                        skynet_DeviousScript.LockDeviceOnActor(speaker, params, libs_local.beltIron)
+                    endif
+                endif
+            endif
         else 
             Debug.Notification("skyrimnet_UNDNG_MCM invalid device name:"+name)
         endif 
