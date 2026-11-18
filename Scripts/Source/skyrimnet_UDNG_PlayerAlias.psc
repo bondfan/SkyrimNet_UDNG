@@ -125,15 +125,17 @@ EndEvent
 Event OnOrgasm(string eventName, string strArg, float numArg, Form sender)
     Actor player = Game.GetPlayer()
     Actor source = player
+    String name = strArg
     if player.GetLeveledActorBase().GetName() != strArg
         Actor[] actors = MiscUtil.ScanCellActors(player, 2000)
         int i = actors.length - 1
         while 0 <= i && source == player
             if actors[i].GetLeveledActorBase().GetName() == strArg
                 source = actors[i]
+                name = source.GetDisplayName()
             endif
             i -= 1
         endwhile
     endif
-    skynet_DeviousScript.SendPapyrusEvent(source.GetDisplayName()+" is cumming!", source)
+    skynet_DeviousScript.SendPapyrusEvent(name+" is cumming!", source)
 EndEvent
