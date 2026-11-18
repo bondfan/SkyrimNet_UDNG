@@ -8,8 +8,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x47566",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x243d6",
                 "id": "piercingVSoul",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x23e70",
-                "Name": "Genital Piercing (Soul Gem)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x23e70",
+                "name": "Genital Piercing (Soul Gem)"
             }
         ]
     },
@@ -22,8 +22,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x409a2",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x23e71",
                 "id": "piercingNSoul",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0xca39",
-                "Name": "Jeweled Piercings (Nipples) (Soulgem)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0xca39",
+                "name": "Jeweled Piercings (Nipples) (Soulgem)"
             }
         ]
     },
@@ -36,8 +36,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x31c6f",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x11b1e",
                 "id": "blindfold",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x11b1a",
-                "Name": "Black Leather Blindfold"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x11b1a",
+                "name": "Black Leather Blindfold"
             }
         ]
     },
@@ -50,8 +50,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x2b073",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0xf564",
                 "id": "gagBall",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x7eb8",
-                "Name": "Black Leather Gag (Ball) (Harness)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x7eb8",
+                "name": "Black Leather Gag (Ball) (Harness)"
             },
             {
                 "description": "A lockable head harness that forces a metal ring between the wearer's teeth and makes speaking impossible.",
@@ -59,8 +59,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x2b076",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0xf565",
                 "id": "gagRing",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x7eb8",
-                "Name": "Black Leather Gag (Ring) (Harness)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x7eb8",
+                "name": "Black Leather Gag (Ring) (Harness)"
             }
         ]
     },
@@ -73,8 +73,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x31c75",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x16155",
                 "id": "harnessCollar",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x3df7",
-                "Name": "Black Leather Collar (Harness)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x3df7",
+                "name": "Black Leather Collar (Harness)"
             },
             {
                 "description": "A metal collar with soft leather padding.",
@@ -82,8 +82,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x1775c",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x48c6",
                 "id": "cuffsPaddedCollar",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x3df7",
-                "Name": "Steel Collar (Padded)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x3df7",
+                "name": "Steel Collar (Padded)"
             },
             {
                 "description": "A steel collar meant to ensure proper posture by covering the whole neck.",
@@ -91,8 +91,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x17759",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x48c1",
                 "id": "collarPosture",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x3df7",
-                "Name": "Steel Collar (Padded) (Posture)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x3df7",
+                "name": "Steel Collar (Padded) (Posture)"
             },
             {
                 "description": "A leather collar with metal studs and rings.",
@@ -100,8 +100,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x32745",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x1c7f1",
                 "id": "cuffsLeatherCollar",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x3df7",
-                "Name": "Black Leather Collar"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x3df7",
+                "name": "Black Leather Collar"
             },
             {
                 "description": "A stiff and rigid leather collar intended to severely restrict head movement once secured around the wearer's neck.",
@@ -109,8 +109,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x4dbef",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x2afa5",
                 "id": "collarRestrictive",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x3df7",
-                "Name": "Black Leather Restrictive Collar"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x3df7",
+                "name": "Black Leather Restrictive Collar"
             }
         ]
     },
@@ -123,8 +123,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x1775b",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x48c3",
                 "id": "cuffsPaddedArms",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x3df9",
-                "Name": "Steel Cuffs (Padded) (Arms)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x3df9",
+                "name": "Steel Cuffs (Padded) (Arms)"
             },
             {
                 "description": "A set of leather arm cuffs.",
@@ -132,8 +132,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x32744",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x1c7f0",
                 "id": "cuffsLeatherArms",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x3df9",
-                "Name": "Black Leather Cuffs (Arms)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x3df9",
+                "name": "Black Leather Cuffs (Arms)"
             },
             {
                 "description": "A lockable armbinder made out of leather, with sturdy reinforcing straps.",
@@ -141,8 +141,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x28a5a",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0xca38",
                 "id": "armbinder",
-                "Keyword": "__formData|Devious Devices - Integration.esm|0x5226c",
-                "Name": "Black Leather Armbinder"
+                "keyword": "__formData|Devious Devices - Integration.esm|0x5226c",
+                "name": "Black Leather Armbinder"
             },
             {
                 "description": "A metal yoke that spreads the wearer's arms and holds them securely in place.",
@@ -150,8 +150,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x4f18c",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x26991",
                 "id": "yoke",
-                "Keyword": "__formData|Devious Devices - Integration.esm|0x5226c",
-                "Name": "Iron Yoke"
+                "keyword": "__formData|Devious Devices - Integration.esm|0x5226c",
+                "name": "Iron Yoke"
             }
         ]
     },
@@ -164,8 +164,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x9a7b",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x435d",
                 "id": "beltPadded",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x3330",
-                "Name": "Steel Chastity Belt (Padded)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x3330",
+                "name": "Steel Chastity Belt (Padded)"
             },
             {
                 "description": "A lockable chastity belt made out of sturdy iron.",
@@ -173,8 +173,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0xeb5d",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x435e",
                 "id": "beltIron",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x3330",
-                "Name": "Iron Chastity Belt"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x3330",
+                "name": "Iron Chastity Belt"
             }
         ]
     },
@@ -187,8 +187,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x31703",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x18c7c",
                 "id": "plugIronVag",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x1dd7c",
-                "Name": "Plug (Iron) (Vaginal)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x1dd7c",
+                "name": "Plug (Iron) (Vaginal)"
             },
             {
                 "description": "A set of inflatable plugs for female orifices meant to be used with a chastity belt to hold them in.",
@@ -196,8 +196,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x19d17",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x48c9",
                 "id": "plugInflatable",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x3331",
-                "Name": "Plug (Inflatable) (Set)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x3331",
+                "name": "Plug (Inflatable) (Set)"
             },
             {
                 "description": "A primitive vaginal plug capable of providing a decent amount of sexual stimulation to the wearer.",
@@ -205,8 +205,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x31c68",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x18c7e",
                 "id": "plugPrimitiveVag",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x1dd7c",
-                "Name": "Plug (Primitive) (Vaginal)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x1dd7c",
+                "name": "Plug (Primitive) (Vaginal)"
             },
             {
                 "description": "A soul gem vaginal plug capable of providing a great amount of sexual stimulation to the wearer.",
@@ -214,8 +214,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x31c6c",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x18c83",
                 "id": "plugSoulgemVag",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x1dd7c",
-                "Name": "Plug (Soulgem) (Vaginal)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x1dd7c",
+                "name": "Plug (Soulgem) (Vaginal)"
             },
             {
                 "description": "An inflatable vaginal plug capable of providing a great amount of sexual stimulation to the wearer.",
@@ -223,8 +223,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x33cee",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x18c81",
                 "id": "plugInflatableVag",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x1dd7c",
-                "Name": "Plug (Inflatable) (Vaginal)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x1dd7c",
+                "name": "Plug (Inflatable) (Vaginal)"
             }
         ]
     },
@@ -237,8 +237,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x31704",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x18c7b",
                 "id": "plugIronAn",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x1dd7d",
-                "Name": "Plug (Iron) (Anal)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x1dd7d",
+                "name": "Plug (Iron) (Anal)"
             },
             {
                 "description": "A primitive anal plug that fills the wearer with a profound sense of fullness.",
@@ -246,8 +246,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x31c69",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x18c7d",
                 "id": "plugPrimitiveAn",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x1dd7d",
-                "Name": "Plug (Primitive) (Anal)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x1dd7d",
+                "name": "Plug (Primitive) (Anal)"
             },
             {
                 "description": "A soul gem anal plug that fills the wearer with a profound sense of fullness.",
@@ -255,8 +255,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x31c6b",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x18c82",
                 "id": "plugSoulgemAn",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x1dd7d",
-                "Name": "Plug (Soulgem) (Anal)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x1dd7d",
+                "name": "Plug (Soulgem) (Anal)"
             },
             {
                 "description": "An inflatable anal plug that fills the wearer with a profound sense of fullness.",
@@ -264,8 +264,8 @@
                 "formInventory": "__formData|Devious Devices - Integration.esm|0x33ced",
                 "formRendered": "__formData|Devious Devices - Assets.esm|0x18c80",
                 "id": "plugInflatableAn",
-                "Keyword": "__formData|Devious Devices - Assets.esm|0x1dd7d",
-                "Name": "Plug (Inflatable) (Anal)"
+                "keyword": "__formData|Devious Devices - Assets.esm|0x1dd7d",
+                "name": "Plug (Inflatable) (Anal)"
             }
         ]
     }

@@ -1,57 +1,46 @@
 Scriptname skynet_DeviousScript
-bool bHasDD = False
-bool bHasDDExpansion = False
-
-bool function SendPapyrusEvent(String content, Actor source, Actor target) Global
-    if (source == None)
-    Else
-        source.SendModEvent("SkyrimNetDDUDNG_Event",content)
-    EndIf
-EndFunction
-
-
-
-Actor function GetNearestAdultActor() Global
-    return none
-EndFunction
-
-function LockDeviceOnActor(Actor akOriginator, string paramsJson, Form inventoryDevice) Global
-    skyrimnet_UDNG_MCM mcm=Game.GetFormFromFile(0x00800, "SkyrimNetUDNG.esp") as skyrimnet_UDNG_MCM 
-    if akOriginator.IsChild()
+Function SendPapyrusEvent(String content, Actor source) Global
+    if source == None
         return
     endif
+    source.SendModEvent("SkyrimNetDDUDNG_Event", content)
+EndFunction
+
+bool Function IsBlockedDevice(Armor device) global
+    if device == None
+        return true
+    endif
+    return device.HasKeyword(Keyword.GetKeyword("zad_QuestItem")) || device.HasKeyword(Keyword.GetKeyword("zad_BlockGeneric"))
+EndFunction
+
+Function LockDeviceOnActor(Actor akOriginator, string paramsJson, Form inventoryDevice) Global
+    if akOriginator == None || akOriginator.IsChild()
+        return
+    endif
+    Armor deviceInventory = inventoryDevice as Armor
     actor akTarget = SkyrimNetApi.GetJsonActor(paramsJson, "target", Game.GetPlayer())
-    if !TargetAllowed(akOriginator, akTarget, true) || akTarget.IsChild()
-        SendPapyrusEvent(akOriginator.GetDisplayName()+" couldn't find a "+deviceInventory.GetName()+" to lock on "+akTarget.GetDisplayName(),akOriginator,none) 
+    if deviceInventory == None || akTarget == None
         return
     endif
-    zadLibs libs_local=Game.GetFormFromFile(0x00F624, "Devious Devices - Integration.esm") as zadlibs
-    Armor deviceInventory=(inventoryDevice as Armor);  
-    If !mcm.quest_devices_allowed
-        If deviceInventory.HasKeyword(Keyword.GetKeyword("zad_QuestItem"))
-            SendPapyrusEvent(akOriginator.GetDisplayName()+" couldn't find a "+deviceInventory.GetName()+" to lock on "+akTarget.GetDisplayName(),akOriginator,none) 
-            return
-        EndIf
-        If deviceInventory.HasKeyword(Keyword.GetKeyword("zad_BlockGeneric"))
-            SendPapyrusEvent(akOriginator.GetDisplayName()+" couldn't find a "+deviceInventory.GetName()+" to lock on "+akTarget.GetDisplayName(),akOriginator,none) 
-            return
-        EndIf 
-        Armor renderDevice=libs_local.GetRenderedDevice(deviceInventory)
-        If renderDevice.HasKeyword(Keyword.GetKeyword("zad_QuestItem"))
-            SendPapyrusEvent(akOriginator.GetDisplayName()+" couldn't find a "+deviceInventory.GetName()+" to lock on "+akTarget.GetDisplayName(),akOriginator,none) 
-            return 
-        EndIf
-        If renderDevice.HasKeyword(Keyword.GetKeyword("zad_BlockGeneric"))
-            SendPapyrusEvent(akOriginator.GetDisplayName()+" couldn't find a "+deviceInventory.GetName()+" to lock on "+akTarget.GetDisplayName(),akOriginator,none) 
-            return
-        EndIf        
-    EndIf
-    If libs_local.LockDevice(akTarget,deviceInventory,false)
-        SendPapyrusEvent(akOriginator.GetDisplayName()+" locked a "+deviceInventory.GetName()+" on "+akTarget.GetDisplayName(),akOriginator,none) 
-    Else
-        SendPapyrusEvent(akOriginator.GetDisplayName()+" tried to lock a "+deviceInventory.GetName()+" on "+akTarget.GetDisplayName()+" but it didn't fit",akOriginator,none) 
-    EndIf
-    return
+    String failure = akOriginator.GetDisplayName()+" couldn't find a "+deviceInventory.GetName()+" to lock on "+akTarget.GetDisplayName()
+    if akTarget.IsChild() || !TargetAllowed(akOriginator, akTarget, true)
+        SendPapyrusEvent(failure, akOriginator)
+        return
+    endif
+    zadLibs libs_local = Game.GetFormFromFile(0x00F624, "Devious Devices - Integration.esm") as zadlibs
+    if libs_local == None
+        return
+    endif
+    skyrimnet_UDNG_MCM mcm = Game.GetFormFromFile(0x00800, "SkyrimNetUDNG.esp") as skyrimnet_UDNG_MCM
+    if !mcm.quest_devices_allowed && (IsBlockedDevice(deviceInventory) || IsBlockedDevice(libs_local.GetRenderedDevice(deviceInventory)))
+        SendPapyrusEvent(failure, akOriginator)
+        return
+    endif
+    if libs_local.LockDevice(akTarget, deviceInventory, false)
+        SendPapyrusEvent(akOriginator.GetDisplayName()+" locked a "+deviceInventory.GetName()+" on "+akTarget.GetDisplayName(), akOriginator)
+    else
+        SendPapyrusEvent(akOriginator.GetDisplayName()+" tried to lock a "+deviceInventory.GetName()+" on "+akTarget.GetDisplayName()+" but it didn't fit", akOriginator)
+    endif
 EndFunction
 
 bool Function DDNG_IsEligible(Actor akActor, string contextJson, string paramsJson) global
@@ -389,30 +378,38 @@ Function ExtCmdUnequip(Actor akOriginator, String paramsJson, String name ) glob
             endif 
         endif 
     endif 
-    if !TargetAllowed(akOriginator, akTarget,false) 
-        return 
-    endif 
+    if akOriginator == None || akTarget == None || akTarget.IsChild()
+        return
+    endif
+    if !TargetAllowed(akOriginator, akTarget,false)
+        return
+    endif
 
     zadLibs libs_local=Game.GetFormFromFile(0x00F624, "Devious Devices - Integration.esm") as zadlibs
-    Keyword kword = Name_to_Keyword(libs_local, name) 
-    if kword == None 
-        SendPapyrusEvent("ExCmdUnequip unknown device name:"+name,akOriginator,none) 
-        return 
-    endif 
-    if !akTarget.WornHasKeyword(kword)
-        Debug.Trace("[SkyrimNet_UDNG] ExCmdUnequip target not wearing keyword "+kword) 
-        return 
-    endif 
+    if libs_local == None
+        return
+    endif
+    Keyword kword = Name_to_Keyword(libs_local, name)
+    if kword == None
+        SendPapyrusEvent("ExCmdUnequip unknown device name:"+name, akOriginator)
+        return
+    endif
 
-    String o_name = akOriginator.GetDisplayName() 
-    String t_name = akTarget.GetDisplayName() 
+    String o_name = akOriginator.GetDisplayName()
+    String t_name = akTarget.GetDisplayName()
+    if !akTarget.WornHasKeyword(kword)
+        Debug.Trace("[SkyrimNet_UDNG] ExCmdUnequip target not wearing keyword "+kword)
+        SendPapyrusEvent(o_name+" tried to unlock a "+name+" on "+t_name+", but "+t_name+" isn't wearing one", akOriginator)
+        return
+    endif
+
     Debug.Trace("[SkyrimNet_UDNG] ExtCmdUnequip "+o_name+" > "+t_name+" with "+name)
     if (libs_local.UnlockDeviceByKeyword(akTarget,kword))
         ; was causing `warning: Assigning None to a non-object variable named "::temp57"`
-        SendPapyrusEvent(o_name+" unlocks a "+name+" on "+t_name,akOriginator,none) 
+        SendPapyrusEvent(o_name+" unlocks a "+name+" on "+t_name, akOriginator)
         Debug.Trace("[SkyrimNet_UDNG] ExtCmdUnequip success")
-    else 
-        SendPapyrusEvent(o_name+" tried, and failed, to unlock a "+name+" on "+t_name,akOriginator,none) 
+    else
+        SendPapyrusEvent(o_name+" tried, and failed, to unlock a "+name+" on "+t_name, akOriginator)
         Debug.Trace("[SkyrimNet_UDNG] ExtCmdUnequip failed")
     EndIf
 EndFunction
@@ -695,9 +692,12 @@ EndFunction
 
 String Function ddudng_get_devices(Actor akSpeaker) global 
     zadLibs zlibs =Game.GetFormFromFile(0x00F624, "Devious Devices - Integration.esm") as zadlibs
+    if zlibs == None || akSpeaker == None
+        return "[]"
+    endif
 
-    Armor[] devices = new Armor[43]
-    String[] names = new String[43]
+    Armor[] devices = new Armor[42]
+    String[] names = new String[42]
     devices[0] = zlibs.armbinder
     names[0] = "armbinder"
     devices[1] = zlibs.beltPadded
@@ -724,66 +724,64 @@ String Function ddudng_get_devices(Actor akSpeaker) global
     names[11] = "cuffsPaddedComplete"
     devices[12] = zlibs.collarPosture
     names[12] = "collarPosture"
-    devices[13] = zlibs.armbinder
-    names[13] = "armbinder"
-    devices[14] = zlibs.gagBall
-    names[14] = "gagBall"
-    devices[15] = zlibs.gagPanel
-    names[15] = "gagPanel"
-    devices[16] = zlibs.gagRing
-    names[16] = "gagRing"
-    devices[17] = zlibs.gagStrapBall
-    names[17] = "gagStrapBall"
-    devices[18] = zlibs.gagStrapRing
-    names[18] = "gagStrapRing"
-    devices[19] = zlibs.blindfold
-    names[19] = "blindfold"
-    devices[20] = zlibs.cuffsLeatherArms
-    names[20] = "cuffsLeatherArms"
-    devices[21] = zlibs.cuffsLeatherLegs
-    names[21] = "cuffsLeatherLegs"
-    devices[22] = zlibs.cuffsLeatherCollar
-    names[22] = "cuffsLeatherCollar"
-    devices[23] = zlibs.harnessBody
-    names[23] = "harnessBody"
-    devices[24] = zlibs.harnessCollar
-    names[24] = "harnessCollar"
-    devices[25] = zlibs.collarPostureLeather
-    names[25] = "collarPostureLeather"
-    devices[26] = zlibs.plugIronVag
-    names[26] = "plugIronVag"
-    devices[27] = zlibs.plugIronAn
-    names[27] = "plugIronAn"
-    devices[28] = zlibs.plugPrimitiveVag
-    names[28] = "plugPrimitiveVag"
-    devices[29] = zlibs.plugPrimitiveAn
-    names[29] = "plugPrimitiveAn"
-    devices[30] = zlibs.plugSoulgemVag
-    names[30] = "plugSoulgemVag"
-    devices[31] = zlibs.plugSoulgemAn
-    names[31] = "plugSoulgemAn"
-    devices[32] = zlibs.plugInflatableVag
-    names[32] = "plugInflatableVag"
-    devices[33] = zlibs.plugInflatableAn
-    names[33] = "plugInflatableAn"
-    devices[34] = zlibs.beltPaddedOpen
-    names[34] = "beltPaddedOpen"
-    devices[35] = zlibs.plugChargeableVag
-    names[35] = "plugChargeableVag"
-    devices[36] = zlibs.plugTrainingVag
-    names[36] = "plugTrainingVag"
-    devices[37] = zlibs.collarRestrictive
-    names[37] = "collarRestrictive"
-    devices[38] = zlibs.corset
-    names[38] = "corset"
-    devices[39] = zlibs.glovesRestrictive
-    names[39] = "glovesRestrictive"
-    devices[40] = zlibs.yoke
-    names[40] = "yoke"
-    devices[41] = zlibs.piercingVSoul
-    names[41] = "piercingVSoul"
-    devices[42] = zlibs.piercingNSoul
-    names[42] = "piercingNSoul"
+    devices[13] = zlibs.gagBall
+    names[13] = "gagBall"
+    devices[14] = zlibs.gagPanel
+    names[14] = "gagPanel"
+    devices[15] = zlibs.gagRing
+    names[15] = "gagRing"
+    devices[16] = zlibs.gagStrapBall
+    names[16] = "gagStrapBall"
+    devices[17] = zlibs.gagStrapRing
+    names[17] = "gagStrapRing"
+    devices[18] = zlibs.blindfold
+    names[18] = "blindfold"
+    devices[19] = zlibs.cuffsLeatherArms
+    names[19] = "cuffsLeatherArms"
+    devices[20] = zlibs.cuffsLeatherLegs
+    names[20] = "cuffsLeatherLegs"
+    devices[21] = zlibs.cuffsLeatherCollar
+    names[21] = "cuffsLeatherCollar"
+    devices[22] = zlibs.harnessBody
+    names[22] = "harnessBody"
+    devices[23] = zlibs.harnessCollar
+    names[23] = "harnessCollar"
+    devices[24] = zlibs.collarPostureLeather
+    names[24] = "collarPostureLeather"
+    devices[25] = zlibs.plugIronVag
+    names[25] = "plugIronVag"
+    devices[26] = zlibs.plugIronAn
+    names[26] = "plugIronAn"
+    devices[27] = zlibs.plugPrimitiveVag
+    names[27] = "plugPrimitiveVag"
+    devices[28] = zlibs.plugPrimitiveAn
+    names[28] = "plugPrimitiveAn"
+    devices[29] = zlibs.plugSoulgemVag
+    names[29] = "plugSoulgemVag"
+    devices[30] = zlibs.plugSoulgemAn
+    names[30] = "plugSoulgemAn"
+    devices[31] = zlibs.plugInflatableVag
+    names[31] = "plugInflatableVag"
+    devices[32] = zlibs.plugInflatableAn
+    names[32] = "plugInflatableAn"
+    devices[33] = zlibs.beltPaddedOpen
+    names[33] = "beltPaddedOpen"
+    devices[34] = zlibs.plugChargeableVag
+    names[34] = "plugChargeableVag"
+    devices[35] = zlibs.plugTrainingVag
+    names[35] = "plugTrainingVag"
+    devices[36] = zlibs.collarRestrictive
+    names[36] = "collarRestrictive"
+    devices[37] = zlibs.corset
+    names[37] = "corset"
+    devices[38] = zlibs.glovesRestrictive
+    names[38] = "glovesRestrictive"
+    devices[39] = zlibs.yoke
+    names[39] = "yoke"
+    devices[40] = zlibs.piercingVSoul
+    names[40] = "piercingVSoul"
+    devices[41] = zlibs.piercingNSoul
+    names[41] = "piercingNSoul"
 
     String devices_str = "" 
     int i = devices.length

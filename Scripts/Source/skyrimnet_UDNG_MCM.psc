@@ -105,7 +105,9 @@ State PlayerActionKeySet
         if continue 
             UnregisterForKey(player_action_key)
             player_action_key = key_code
-            RegisterForKey(player_action_key)
+            if player_action_allowed
+                RegisterForKey(player_action_key)
+            endif
             SetKeymapOptionValueST(player_action_key)
         endif 
     EndEvent
@@ -150,7 +152,9 @@ State DebugKeySet
         if continue 
             UnregisterForKey(debug_key)
             debug_key = key_code
-            RegisterForKey(debug_key)
+            if debug_key_allowed
+                RegisterForKey(debug_key)
+            endif
             SetKeymapOptionValueST(debug_key)
         endif 
     EndEvent
@@ -166,7 +170,7 @@ Event OnKeyDown(int key_code)
         return 
     endif 
 
-    if key_code == player_action_key
+    if key_code == player_action_key && player_action_allowed
         Actor target = Game.GetCurrentCrosshairRef() as Actor 
         if target == None 
             Trace("OnKeyDown: A actor was not found in the crosshairs")
@@ -175,7 +179,7 @@ Event OnKeyDown(int key_code)
 
 ;        skyrimnet_UDNG_Groups groups = (self as Quest) as skyrimnet_UDNG_Groups
         groups.UpdateDevices(target)
-    ElseIf key_code == debug_key
+    ElseIf key_code == debug_key && debug_key_allowed
         Actor speaker = Game.GetCurrentCrosshairRef() as Actor 
         if speaker == None 
             Trace("OnKeyDown: A actor was not found in the crosshairs")
@@ -201,7 +205,8 @@ Event OnKeyDown(int key_code)
                 if i == target_self 
                     target = speaker 
                     label = "self"
-                elseif i == target_other 
+                elseif i == target_other
+                    label = "other"
                     Actor[] actors = MiscUtil.ScanCellActors(player, 1000)
                     int j = actors.length - 1 
                     while 0 <= j && target == None 
@@ -209,9 +214,8 @@ Event OnKeyDown(int key_code)
                             target = actors[j] 
                             target_other_actor = target
                         endif 
-                        j -= 1 
-                    label = "other"
-                    endwhile 
+                        j -= 1
+                    endwhile
                 elseif i == target_player 
                     target = player 
                     label = "player"
@@ -315,6 +319,7 @@ State NPC_Unequip_Player
     Event OnSelectST()
         npc_unequip_player_allowed = !npc_unequip_player_allowed
         SetToggleOptionValueST(npc_unequip_player_allowed)
+        skynet_DeviousScript.RegisterDeviousActions(self)
         ForcePageReset()
     EndEvent
     Event OnHighlightST()
@@ -326,6 +331,7 @@ State NPC_Unequip_Self
     Event OnSelectST()
         npc_unequip_self_allowed = !npc_unequip_self_allowed
         SetToggleOptionValueST(npc_unequip_self_allowed)
+        skynet_DeviousScript.RegisterDeviousActions(self)
         ForcePageReset()
     EndEvent
     Event OnHighlightST()
@@ -337,6 +343,7 @@ State NPC_Unequip_Others
     Event OnSelectST()
         npc_unequip_others_allowed = !npc_unequip_others_allowed
         SetToggleOptionValueST(npc_unequip_others_allowed)
+        skynet_DeviousScript.RegisterDeviousActions(self)
         ForcePageReset()
     EndEvent
     Event OnHighlightST()

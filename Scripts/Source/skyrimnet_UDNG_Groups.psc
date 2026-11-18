@@ -32,14 +32,14 @@ Function UpdateDevices(Actor target)
     String[] style_buttons = Utility.CreateStringArray(style_cancel + 1) 
     style_buttons[style_forcefully] = "Forcefully by player"
     style_buttons[style_normally] = "by player"
-    style_buttons[style_gently] = "Gently by player "
+    style_buttons[style_gently] = "Gently by player"
     style_buttons[style_silently] = "(Silently)"
     style_buttons[style_cancel] = "Cancel"
 
     String msg = "How does "+target.getDisplayName() +" change devices: \n" \
         +" (Silently) with no message to LLM." 
     int style = SkyMessage.ShowArray(msg, style_buttons, getIndex = true) as int 
-    if style == style_cancel 
+    if style < 0 || style >= style_cancel
         return 
     endif 
     ChangeGroup(style, target) 
@@ -98,7 +98,9 @@ Function ChangeGroup(int style, Actor target)
 
         listMenu.OpenMenu() 
         button = listMenu.GetResultInt()
-        if button < Done 
+        if button < 0
+            button = Done
+        elseif button < Done 
             equipped_current[button] = ChangeDevices(target, devices[button])
         endif 
     endwhile 
@@ -108,9 +110,9 @@ Function ChangeGroup(int style, Actor target)
     endif 
 
     String[] style_desc = Utility.CreateStringArray(3) 
-    style_desc[style_forcefully] = " forcefully "
+    style_desc[style_forcefully] = " forcefully"
     style_desc[style_normally] = ""
-    style_desc[style_gently] = " gently "
+    style_desc[style_gently] = " gently"
 
     int removed = 0 
     int added = 1 
@@ -153,18 +155,14 @@ Function ChangeGroup(int style, Actor target)
         endif 
         type += 1
     endwhile 
+    if msg == ""
+        return
+    endif
     Debug.Notification(msg)
-    if msg != ""
-        SkyrimNetApi.DirectNarration(msg, player, target) 
-    endif 
+    SkyrimNetApi.DirectNarration(msg, player, target) 
 EndFunction
 
 int Function ChangeDevices(Actor target, int devices)
-
-    AddKeys(target, zlibs.chastityKey, 1)
-    AddKeys(target, zlibs.restraintsKey, 2)
-    AddKeys(target, zlibs.piercingKey, 1)
-
     uilistmenu listMenu = uiextensions.GetMenu("UIListMenu") as uilistmenu
     int button = 0
     int cancel = JArray.count(devices)
@@ -185,40 +183,56 @@ int Function ChangeDevices(Actor target, int devices)
 
     listMenu.OpenMenu() 
     button = listMenu.GetResultInt()
-    if button < cancel 
-        int device = Jarray.getObj(devices, button) 
-        Armor inventory = JMap.GetForm(device, "formInventory") as Armor 
-        Armor rendered = JMap.getForm(device, "formRendered") as Armor 
-        String name = JMap.GetStr(device, "name")
-        Keyword kword = JMap.GetForm(device,"keyword") as Keyword
-        if device == wearing 
-            Bool success = zlibs.UnLockDevice(target, inventory, rendered, destroyDevice = true)
-            if success 
-                wearing = -1
-            endif 
-        elseif wearing == -1 
-            Bool success = zlibs.LockDevice(target, inventory, force = true)
-            if success 
-                wearing = device 
-            endif 
-        else 
-            int eq_device = Jarray.getObj(devices, wearing) 
-            Armor eq_inventory = JMap.GetForm(eq_device, "formInventory") as Armor 
-            String eq_name = JMap.GetStr(eq_device, "name")
-            Bool success = zlibs.SwapDevices(target, inventory, kword, destroyDevice=True)
-            if success 
-                wearing = device 
-            endif 
-        endif 
+    if button < 0 || button >= cancel
+        return wearing
     endif
+
+    int chastity_keys = AddKeys(target, zlibs.chastityKey, 1)
+    int restraints_keys = AddKeys(target, zlibs.restraintsKey, 2)
+    int piercing_keys = AddKeys(target, zlibs.piercingKey, 1)
+
+    int selected = Jarray.getObj(devices, button) 
+    Armor inventory = JMap.GetForm(selected, "formInventory") as Armor 
+    Armor rendered = JMap.getForm(selected, "formRendered") as Armor 
+    Keyword kword = JMap.GetForm(selected,"keyword") as Keyword
+    if selected == wearing 
+        Bool success = zlibs.UnLockDevice(target, inventory, rendered, destroyDevice = true)
+        if success 
+            wearing = -1
+        endif 
+    elseif wearing == -1 
+        Bool success = zlibs.LockDevice(target, inventory, force = true)
+        if success 
+            wearing = selected 
+        endif 
+    else 
+        Bool success = zlibs.SwapDevices(target, inventory, kword, destroyDevice=True)
+        if success 
+            wearing = selected 
+        endif 
+    endif 
+
+    RemoveKeys(target, zlibs.chastityKey, chastity_keys)
+    RemoveKeys(target, zlibs.restraintsKey, restraints_keys)
+    RemoveKeys(target, zlibs.piercingKey, piercing_keys)
     return wearing
 EndFunction
 
-Function AddKeys(Actor target, Key z_key, int num) 
+Function RemoveKeys(Actor target, Key z_key, int num)
+    if num <= 0
+        return
+    endif
+    target.RemoveItem(z_key, num, abSilent=True)
+EndFunction
+
+; Returns the number of keys added
+int Function AddKeys(Actor target, Key z_key, int num) 
     int need = num - target.GetItemCount(z_key) 
-    if need > 0 
-        target.AddItem(z_key, need, abSilent=True) 
+    if need <= 0 
+        return 0
     endif 
+    target.AddItem(z_key, need, abSilent=True) 
+    return need
 EndFunction 
 
 Function Trace(String msg, bool notification=false) 

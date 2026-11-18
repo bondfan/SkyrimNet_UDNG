@@ -20,7 +20,7 @@ def device_parse(fname):
     with open(fname) as fin: 
         devices = json.load(fin) 
         for device in devices: 
-            device_info[device['id'].lower()] = device
+            device_info[device['id'].lower()] = {k.lower() if k in ('Keyword', 'Name') else k: v for k, v in device.items()}
     return device_info
 
 def group_parse(fname, device_info): 
