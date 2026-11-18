@@ -68,16 +68,16 @@ Function RegisterDeviousActions(skyrimnet_UDNG_MCM mcm) global
         refinement = "other NPCs"
     endif 
     if !mcm.npc_unequip_self_allowed
-        if refinement == "" 
+        if refinement != "" 
             refinement += ", "
         endif 
-        refinement = "themselves"
+        refinement += "themselves"
     endif 
     if !mcm.npc_unequip_player_allowed
-        if refinement == "" 
+        if refinement != "" 
             refinement += ", "
         endif 
-        refinement = "player"
+        refinement += "player"
     endif 
 
     if refinement != ""
