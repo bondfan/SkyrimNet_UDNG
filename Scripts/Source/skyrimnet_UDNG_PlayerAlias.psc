@@ -121,6 +121,19 @@ Event OnStopMinigame(String source,Form WearerF,Form HelperF,String minigame,flo
         EndIf
     EndIf
 EndEvent
+; DD sends only the actor's leveled base name; match it against nearby actors, falling back to the player.
 Event OnOrgasm(string eventName, string strArg, float numArg, Form sender)
-    skynet_DeviousScript.SendPapyrusEvent(strArg+" is cumming!",Game.GetPlayer())
+    Actor player = Game.GetPlayer()
+    Actor source = player
+    if player.GetLeveledActorBase().GetName() != strArg
+        Actor[] actors = MiscUtil.ScanCellActors(player, 2000)
+        int i = actors.length - 1
+        while 0 <= i && source == player
+            if actors[i].GetLeveledActorBase().GetName() == strArg
+                source = actors[i]
+            endif
+            i -= 1
+        endwhile
+    endif
+    skynet_DeviousScript.SendPapyrusEvent(source.GetDisplayName()+" is cumming!", source)
 EndEvent
