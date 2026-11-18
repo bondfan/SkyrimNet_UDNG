@@ -1,4 +1,4 @@
-# Review of the November 18 code review
+# Review of the November 18 Code Review
 
 Reviewed against `61de330`. Static inspection only.
 
@@ -12,12 +12,12 @@ Reviewed against `61de330`. Static inspection only.
 - **9 — Type ambiguity.** Binder, ElbowTie and StraitJacket use the same removal keyword. Yoke maps to its own keyword, and the review does not establish whether a specific yoke also carries the shared keyword.
 - **10, 11 — Confirmed code paths.** UD handlers dereference unchecked wearer and inventory forms and use base names. The orgasm handler always emits from the player. Check the upstream sender before using it for actor attribution.
 
-## Missed findings
+## Missed Findings
 
 - `Groups.psc:99–103,186–195` accepts negative menu results. A `-1` result can index Papyrus arrays in the parent menu and reach device lookup in the submenu. Confirm dismissal behavior with the installed UIExtensions. [UIListMenu implementation with a negative dismissal result](https://git.eddoursul.win/enderal/enderalse/src/commit/acb132637628befd75f969be3e1ccf5eaca46826/source/scripts/uilistmenu.psc#L156)
 - `skynet_DeviousScript.psc:64–85` builds permission text during action registration. The MCM toggles change runtime enforcement immediately but never refresh the registered descriptions. See `PlayerAlias.psc:27–28` and `MCM.psc:314–344`.
 
-## Performance and cleanup
+## Performance and Cleanup
 
 - **1, 2 — Measure requests.** Three rules share the event criterion and a fourth matches the orgasm payload. Persistent context records an event. Narration and thought rules have cooldowns. Action and UD callbacks can each emit an event when both paths run. Match counts alone establish neither LLM call counts nor a doubling. [SkyrimNet trigger response types](https://github.com/MinLL/SkyrimNet-GamePlugin/blob/main/docs/modding/WORKFLOW_TRIGGERS.md#step-25-choose-response-type)
 - **3–7 — Confirmed code observations.** The empty update handler is registered. There are 23 unequip actions with a combat check beneath a separate category child check. Prompt inclusion depends on SkyrimNet. The decorator allocates two arrays and has no in-repo prompt caller. The library cache is an MCM field private to that script. Repeated lookups are low priority without profiling. Use `elseif` only if the minigame names are mutually exclusive.

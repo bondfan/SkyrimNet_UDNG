@@ -8,6 +8,10 @@ eventCriteria:
       operator: "equals"
       value: "SkyrimNetDDUDNG_Event"
       caseSensitive: false
+    - fieldPath: "str_arg"
+      operator: "not_contains"
+      value: "cumming"
+      caseSensitive: false
 
 response:
   type: "direct_narration"
